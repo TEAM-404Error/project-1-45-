@@ -1,15 +1,28 @@
 const express = require('express');
 const cors = require('cors');
-const songsRoutes = require('./routes/songs');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
-const PORT = 5000;
+const port = 5000;
 
-app.use(cors());
-app.use(express.json());
+// Middleware
+app.use(cors());  // CORS middleware to allow cross-origin requests
+app.use(bodyParser.json());
 
-app.use('/api/songs', songsRoutes);
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/audiffy', { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Simple route to test server
+app.get('/', (req, res) => {
+  res.send('Audiffy Backend is running!');
+});
+
+// Add other routes like login/signup here
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
