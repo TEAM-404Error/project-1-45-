@@ -1,20 +1,29 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Search from './pages/Search';
-import Playlist from './pages/Playlist';
-import MainLayout from './layouts/MainLayout';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import SongList from './components/SongList';
 
-export default function App() {
+function App() {
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/songs');
+        setSongs(response.data); // Assuming the response contains the song data
+      } catch (error) {
+        console.error('Error fetching songs:', error);
+      }
+    };
+    
+    fetchSongs();
+  }, []); // Empty dependency array ensures it runs only once when the component mounts
+
   return (
-    <Router>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/playlist/:id" element={<Playlist />} />
-        </Routes>
-      </MainLayout>
-    </Router>
+    <div className="App">
+      <h1>Audiffy</h1>
+      <SongList songs={songs} />
+    </div>
   );
 }
+
+export default App;
